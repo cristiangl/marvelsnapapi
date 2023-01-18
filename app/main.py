@@ -18,10 +18,10 @@ def getAllCards():
 @app.get("/card/{card_name}")
 def getCard(card_name: str):
 
-    card = findCardInDB(card_name, readDataBase())
+    cards = findCardInDB(card_name, readDataBase())
 
-    if card:
-        return card
+    if len(cards):
+        return cards
 
     return {
         "status": "404",
