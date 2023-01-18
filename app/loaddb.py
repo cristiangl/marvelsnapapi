@@ -32,7 +32,7 @@ for card in cards:
     card['name-slug'] = pascal_to_kebab(name)
     db.append(card)
 
-f = open('./db/database.json', 'w')
+f = open('db/database.json', 'w')
 
 f.write(json.dumps(db))
 
