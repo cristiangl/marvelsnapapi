@@ -10,7 +10,7 @@ def readDataBase ():
 
     return data
 
-def findCardInDB(searchName, db):
+def searchCardsInDB(searchName, db):
     results = []
     searchNameCleared = searchName.lower().strip()
     for card in db:
@@ -18,3 +18,11 @@ def findCardInDB(searchName, db):
             results.append(card)
     
     return results
+
+def findCardInDB(cardName, db):
+    searchNameCleared = cardName.lower().strip()
+    for card in db:
+        if card['name'].lower() == (searchNameCleared):
+            return card
+    
+    return None
