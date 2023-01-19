@@ -2,11 +2,22 @@
 	"builds": [
         { "src": "main.py", "use": "@vercel/python" }
     ],
-	"routes": [
-		{ "src": "/", "dest": "main.py" },
-		{ "src": "/cards", "dest": "main.py" },
-		{ "src": "/card/(?<card_name>[^/]*)", "dest": "main.py?card_name=$card_name" },
-		{ "src": "/docs", "dest": "main.py" },
-		{ "src": "/openapi.json", "dest": "main.py" }
-	]
+	"rewrites": [
+		{ "source": "/", "destination": "main.py" },
+		{ "source": "/cards", "destination": "main.py" },
+		{ "source": "/card/:card_name", "destination": "main.py" },
+		{ "source": "/docs", "destination": "main.py" },
+		{ "source": "/openapi.json", "destination": "main.py" }
+	],
+	"headers": [
+		{
+		  "source": "/(.*)",
+		  "headers": [
+			{ "key": "Access-Control-Allow-Credentials", "value": "true" },
+			{ "key": "Access-Control-Allow-Origin", "value": "*" },
+			{ "key": "Access-Control-Allow-Methods", "value": "GET,OPTIONS,PATCH,DELETE,POST,PUT" },
+			{ "key": "Access-Control-Allow-Headers", "value": "X-CSRF-Token, X-Requested-With, Accept, Accept-Version, Content-Length, Content-MD5, Content-Type, Date, X-Api-Version" }
+		  ]
+		}
+	  ]
 }
