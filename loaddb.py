@@ -2,14 +2,9 @@ import requests
 import json 
 import re
 
-MARVEL_ZONE_CARDS_URL = "https://marvelsnapzone.com/getinfo/?searchtype=cards&searchcardstype=true"
+MARVEL_ZONE_CARDS_URL = "https://static2.marvelsnap.pro/snap/do.php?cmd=getCards"
+MARVEL_ZONE_CARDS_IMAGE_URL = "https://static.marvelsnap.pro/cards/"
 
-def pascal_to_kebab(string):
-    string = re.sub(r'[^\w-]', '-', string)
-    string = re.sub(r'([A-Z])', lambda x: '-' + x.group(1).lower(), string)
-    string = re.sub(r'--', '-', string)
-    string = re.sub(r'^-*|-*$', '', string)
-    return string
 print("\n\n")
 print("=============================================")
 print("| Actualizando base de datos de Marvel Snap |")
@@ -21,17 +16,41 @@ response = json.loads(res.text)
 
 print("\nConstruyendo la base de datos...")
 
-cards = response['success']['cards']
+cards = response
 
 db = []
-for card in cards:
-    name = card['carddefid']
-    if name == '':
-        name = card['name'].replace(" ", "")
+for cardID in cards:
+    card = cards[cardID]
+    card['description'] = re.sub(r'\<(.*?)\>', '', card['description'])
+    card['image'] = MARVEL_ZONE_CARDS_IMAGE_URL + card['CardDefId'] + '.webp'
+    card['abilities'] = json.loads(card['abilities'])
+    card['collectible'] = int(card['collectible'])
+    variantsData = json.loads(card['variants'])
+    variants = []
+    for varData in variantsData:
+        if varData['id'] == 'base':
+            continue
+        
+        varTemp = {}
+        varTemp['id'] = varData['id']
+        varTemp['image'] = MARVEL_ZONE_CARDS_IMAGE_URL + card['CardDefId'] + '_' + varData['id'] + '.webp'
+        variants.append(varTemp)
+    card['variants'] = variants
 
-    card['name-slug'] = pascal_to_kebab(name)
+    connectedCards = []
+    connectedCardsData = json.loads(card['connected_cards'])
+    for conData in connectedCardsData:
+        conDataTemp = {}
+        conDataTemp['id'] = conData
+        conDataTemp['image'] = MARVEL_ZONE_CARDS_IMAGE_URL + conData + '.webp'
+        connectedCards.append(conDataTemp)
+
+    card['connectedCards'] =  connectedCards
+    del card['connected_cards']
     db.append(card)
+    
 
+print(db)
 f = open('db/database.json', 'w')
 
 f.write(json.dumps(db))

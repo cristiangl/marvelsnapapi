@@ -22,7 +22,7 @@ def searchCardsInDB(searchName, db):
 def findCardInDB(cardName, db):
     searchNameCleared = cardName.lower().strip()
     for card in db:
-        if card['name'].lower() == (searchNameCleared):
+        if card['CardDefId'].lower() == (searchNameCleared):
             return card
     
     return None
