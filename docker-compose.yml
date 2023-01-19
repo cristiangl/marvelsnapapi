@@ -4,11 +4,11 @@ services:
   marvelsnapapi:
     container_name: marvelsnapapi
     build: .
-    working_dir: /code/app
+    working_dir: /code
     command: uvicorn main:app --host 0.0.0.0 --port 8556 --reload
     environment:
       DEBUG: 1
     volumes:
-      - ./app:/code/app
+      - .:/code
     ports:
       - 8556:8556
