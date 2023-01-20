@@ -6,6 +6,7 @@
 		{ "source": "/", "destination": "main.py" },
 		{ "source": "/cards", "destination": "main.py" },
 		{ "source": "/card/:card_name", "destination": "main.py" },
+		{ "source": "/images/:image", "destination": "main.py" },
 		{ "source": "/docs", "destination": "main.py" },
 		{ "source": "/openapi.json", "destination": "main.py" }
 	],

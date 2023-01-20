@@ -13,7 +13,7 @@ def resize(imagePath):
         height_percent = (fixed_height / float(image.size[1]))
         width_size = int( float(image.size[0]) * float(height_percent) )
         # image = image.resize((width_size, fixed_height), PIL.Image.NEAREST)
-        image.save(imagePath, 'webp', optimize=True, quality=50)
+        image.save(imagePath, 'webp', optimize=True, quality=10)
 
 def descargar_imagenes(nombres, carpeta):
     # Crear la carpeta si no existe
@@ -21,6 +21,7 @@ def descargar_imagenes(nombres, carpeta):
         os.makedirs(carpeta)
     errores = []
     for nombre in nombres:
+        print(nombre)
         # Construir la URL de la imagen
         url = MARVEL_ZONE_CARDS_IMAGE_URL + str(nombre) + '.webp'
         # Descargar la imagen
