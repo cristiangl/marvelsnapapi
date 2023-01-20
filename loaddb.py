@@ -22,18 +22,18 @@ db = []
 for cardID in cards:
     card = cards[cardID]
     card['description'] = re.sub(r'\<(.*?)\>', '', card['description'])
-    card['image'] = MARVEL_ZONE_CARDS_IMAGE_URL + card['CardDefId'] + '.webp'
+    card['image'] = '/images/'+ card['CardDefId'] + '.webp'
     card['abilities'] = json.loads(card['abilities'])
     card['collectible'] = int(card['collectible'])
     variantsData = json.loads(card['variants'])
     variants = []
     for varData in variantsData:
-        if varData['id'] == 'base':
+        if varData['id'] == 'base' or not varData['released']:
             continue
         
         varTemp = {}
         varTemp['id'] = varData['id']
-        varTemp['image'] = MARVEL_ZONE_CARDS_IMAGE_URL + card['CardDefId'] + '_' + varData['id'] + '.webp'
+        varTemp['image'] = '/images/' + card['CardDefId'] + '_' + varData['id'] + '.webp'
         variants.append(varTemp)
     card['variants'] = variants
 
@@ -42,7 +42,7 @@ for cardID in cards:
     for conData in connectedCardsData:
         conDataTemp = {}
         conDataTemp['id'] = conData
-        conDataTemp['image'] = MARVEL_ZONE_CARDS_IMAGE_URL + conData + '.webp'
+        conDataTemp['image'] = '/images/' + conData + '.webp'
         connectedCards.append(conDataTemp)
 
     card['connectedCards'] =  connectedCards
