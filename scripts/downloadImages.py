@@ -3,13 +3,9 @@ import requests
 from utils.utils import readDataBase
 import PIL
 from PIL import Image
+from scripts.utils import resize
 
 MARVEL_ZONE_CARDS_IMAGE_URL = "https://static.marvelsnap.pro/cards/"
-
-def resize(imagePath):
-        image = Image.open(imagePath)
-        image = image.crop((125, 0, image.width - 125, image.height))
-        image.save(imagePath, 'webp', optimize=True, quality=10)
 
 def descargar_imagenes(nombres, carpeta):
     # Crear la carpeta si no existe

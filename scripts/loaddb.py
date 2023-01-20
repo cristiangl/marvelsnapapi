@@ -1,6 +1,9 @@
 import requests
 import json 
 import re
+import os
+from utils import descargar_imagen
+
 
 MARVEL_ZONE_CARDS_URL = "https://static2.marvelsnap.pro/snap/do.php?cmd=getCards"
 MARVEL_ZONE_CARDS_IMAGE_URL = "https://static.marvelsnap.pro/cards/"
@@ -23,6 +26,11 @@ for cardID in cards:
     card = cards[cardID]
     card['description'] = re.sub(r'\<(.*?)\>', '', card['description'])
     card['image'] = '/images/'+ card['CardDefId'] + '.webp'
+
+    if not os.path.exists('images/'+ card['CardDefId'] + '.webp'):
+        print('No existe => images/'+ card['CardDefId'] + '.webp')
+        descargar_imagen(card['CardDefId'])
+
     card['abilities'] = json.loads(card['abilities'])
     card['collectible'] = int(card['collectible'])
     variantsData = json.loads(card['variants'])
@@ -34,6 +42,12 @@ for cardID in cards:
         varTemp = {}
         varTemp['id'] = varData['id']
         varTemp['image'] = '/images/' + card['CardDefId'] + '_' + varData['id'] + '.webp'
+
+        if not os.path.exists('images/' + card['CardDefId'] + '_' + varData['id'] + '.webp'):
+            print('No existe => images/'+ card['CardDefId'] + '_' + varData['id'] + '.webp')
+            descargar_imagen(card['CardDefId'] + '_' + varData['id'])
+
+
         variants.append(varTemp)
     card['variants'] = variants
 
@@ -50,7 +64,6 @@ for cardID in cards:
     db.append(card)
     
 
-print(db)
 f = open('db/database.json', 'w')
 
 f.write(json.dumps(db))
