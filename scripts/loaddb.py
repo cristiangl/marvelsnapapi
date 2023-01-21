@@ -41,14 +41,15 @@ for cardID in cards:
         
         varTemp = {}
         varTemp['id'] = varData['id']
+        varTemp['credits'] = varData['credits']
         varTemp['image'] = '/images/' + card['CardDefId'] + '_' + varData['id'] + '.webp'
 
         if not os.path.exists('images/' + card['CardDefId'] + '_' + varData['id'] + '.webp'):
             print('No existe => images/'+ card['CardDefId'] + '_' + varData['id'] + '.webp')
             descargar_imagen(card['CardDefId'] + '_' + varData['id'])
 
-
         variants.append(varTemp)
+    
     card['variants'] = variants
 
     connectedCards = []
