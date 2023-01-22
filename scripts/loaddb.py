@@ -3,6 +3,7 @@ import json
 import re
 import os
 from utils import descargar_imagen
+from pathlib import Path
 
 
 MARVEL_ZONE_CARDS_URL = "https://static2.marvelsnap.pro/snap/do.php?cmd=getCards"
@@ -17,6 +18,9 @@ print("Conectando con Marvel Snap Zone...")
 res = requests.get(MARVEL_ZONE_CARDS_URL)
 response = json.loads(res.text)
 
+IMAGE_FOLDER = Path(__file__).parents[1]
+print(IMAGE_FOLDER)
+
 print("\nConstruyendo la base de datos...")
 
 cards = response
@@ -27,26 +31,32 @@ for cardID in cards:
     card['description'] = re.sub(r'\<(.*?)\>', '', card['description'])
     card['image'] = '/images/'+ card['CardDefId'] + '.webp'
 
-    if not os.path.exists('images/'+ card['CardDefId'] + '.webp'):
+    if not os.path.exists(str(IMAGE_FOLDER) + '/images/'+ card['CardDefId'] + '.webp'):
         print('No existe => images/'+ card['CardDefId'] + '.webp')
-        descargar_imagen(card['CardDefId'])
+        isImageSaved = descargar_imagen(card['CardDefId'])
+        if not isImageSaved:
+            continue
 
     card['abilities'] = json.loads(card['abilities'])
     card['collectible'] = int(card['collectible'])
     variantsData = json.loads(card['variants'])
     variants = []
     for varData in variantsData:
-        if varData['id'] == 'base' or not varData['released']:
+        if varData['id'] == 'base':
             continue
         
         varTemp = {}
         varTemp['id'] = varData['id']
-        varTemp['credits'] = varData['credits']
+        varTemp['credits'] = {}
+        if 'credits' in varData:
+            varTemp['credits'] = varData['credits']
         varTemp['image'] = '/images/' + card['CardDefId'] + '_' + varData['id'] + '.webp'
 
-        if not os.path.exists('images/' + card['CardDefId'] + '_' + varData['id'] + '.webp'):
+        if not os.path.exists(str(IMAGE_FOLDER) + '/images/' + card['CardDefId'] + '_' + varData['id'] + '.webp'):
             print('No existe => images/'+ card['CardDefId'] + '_' + varData['id'] + '.webp')
-            descargar_imagen(card['CardDefId'] + '_' + varData['id'])
+            isImageSaved = descargar_imagen(card['CardDefId'] + '_' + varData['id'])
+            if not isImageSaved:
+                continue
 
         variants.append(varTemp)
     

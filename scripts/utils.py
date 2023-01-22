@@ -15,7 +15,6 @@ def descargar_imagen(nombre, carpeta = 'images'):
     if not os.path.exists(carpeta):
         os.makedirs(carpeta)
 
-    errores = []
     # Construir la URL de la imagen
     url = MARVEL_ZONE_CARDS_IMAGE_URL + str(nombre) + '.webp'
     # Descargar la imagen
@@ -28,7 +27,7 @@ def descargar_imagen(nombre, carpeta = 'images'):
         
         resize(fileName)
     except:
-        errores.append(url + "no encontrada")
+        return None
     
-    for error in errores:
-        print(error)
+    return True
+    
